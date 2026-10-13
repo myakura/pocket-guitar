@@ -797,6 +797,25 @@ body {
   color: #fda4af;
 }
 
+/* Left-Handed (Lefty) Mode String Reversal */
+.app-shell.is-lefty .nut-row,
+.app-shell.is-lefty .fretboard-surface,
+.app-shell.is-lefty .strum-columns {
+  direction: rtl;
+}
+
+.app-shell.is-lefty .nut-cell,
+.app-shell.is-lefty .fret-cell,
+.app-shell.is-lefty .bridge-pin {
+  direction: ltr;
+}
+
+.app-shell.is-lefty .pickguard {
+  right: auto;
+  left: 6%;
+  transform: scaleX(-1);
+}
+
 /* Help Popover Modal */
 .help-modal {
   margin: auto;

@@ -38,6 +38,7 @@
     tone: 'acoustic',  // 'acoustic' | 'clean' | 'drive'
     capo: 0,
     holdMode: false,
+    leftHanded: false,
     guideChordId: '',
     selectedChordId: 'C',
     tapStrumInChordMode: false,
@@ -519,9 +520,15 @@
     const detected = state.mode === 'chord' ? state.selectedChordId : detectChordName(effectiveFrets);
     activeChordBadge.textContent = detected;
 
-    // Highlight active chord pad
+    // Highlight active chord pad and update voicing order for lefty mode
     for (const [id, btn] of chordPadButtons.entries()) {
       btn.classList.toggle('active', id === state.selectedChordId);
+      const chord = CHORD_MAP[id];
+      const voicingEl = btn.querySelector('.chord-pad-voicing');
+      if (chord && voicingEl) {
+        const frets = state.leftHanded ? [...chord.frets].reverse() : chord.frets;
+        voicingEl.textContent = frets.map((f) => (f < 0 ? 'x' : f)).join(' ');
+      }
     }
   }
 
@@ -562,7 +569,8 @@
     }
     const relX = (clientX - rect.left) / rect.width;
     const relY = (clientY - rect.top) / rect.height;
-    const stringIdx = Math.min(5, Math.max(0, Math.floor(relX * 6)));
+    const col = Math.min(5, Math.max(0, Math.floor(relX * 6)));
+    const stringIdx = state.leftHanded ? 5 - col : col;
     const fret = Math.min(NUM_FRETS, Math.max(1, Math.floor(relY * NUM_FRETS) + 1));
     return { stringIdx, fret };
   }
@@ -626,7 +634,10 @@
     const colsRect = strumColumns.getBoundingClientRect();
     const offsetLeft = colsRect.left - canvasRect.left;
     const colWidth = colsRect.width / 6;
-    const xs = STRINGS.map((_, s) => offsetLeft + colWidth * (s + 0.5));
+    const xs = STRINGS.map((_, s) => {
+      const col = state.leftHanded ? 5 - s : s;
+      return offsetLeft + colWidth * (col + 0.5);
+    });
     return { xs, colWidth };
   }
 
@@ -709,7 +720,7 @@
 
     if (Math.abs(dx) > 1.5) {
       const { xs: stringXs } = getStringLayout();
-      const direction = dx > 0 ? 'down' : 'up';
+      const direction = (dx > 0) !== state.leftHanded ? 'down' : 'up';
       // Calculate normalized velocity from swipe speed (px/ms)
       const speedPxPerMs = Math.abs(dx) / dt;
       const velocity = Math.min(1.0, Math.max(0.45, 0.48 + speedPxPerMs * 0.28));
@@ -826,6 +837,7 @@
   const neckWidthSlider = document.getElementById('neck-width-slider');
   const neckWidthValue = document.getElementById('neck-width-value');
   const alignButtons = document.querySelectorAll('.align-btn');
+  const leftyToggleBtn = document.getElementById('lefty-toggle-btn');
 
   function applyNeckLayout(widthPercent, align) {
     const clampedWidth = Math.min(100, Math.max(50, Number(widthPercent) || 76));
@@ -848,6 +860,18 @@
     } catch (_) {}
   }
 
+  function applyLeftHanded(isLefty) {
+    state.leftHanded = Boolean(isLefty);
+    appShell.classList.toggle('is-lefty', state.leftHanded);
+    if (leftyToggleBtn) {
+      leftyToggleBtn.setAttribute('aria-pressed', String(state.leftHanded));
+    }
+    updateFretboardVisuals();
+    try {
+      localStorage.setItem('pocketGuitar.leftHanded', state.leftHanded ? '1' : '0');
+    } catch (_) {}
+  }
+
   if (neckWidthSlider) {
     neckWidthSlider.addEventListener('input', () => {
       const currentAlign = document.querySelector('.align-btn.active')?.dataset.align || 'center';
@@ -861,6 +885,12 @@
       applyNeckLayout(neckWidthSlider ? neckWidthSlider.value : 76, align);
     });
   });
+
+  if (leftyToggleBtn) {
+    leftyToggleBtn.addEventListener('click', () => {
+      applyLeftHanded(!state.leftHanded);
+    });
+  }
 
   function setMode(newMode) {
     state.mode = newMode;
@@ -965,21 +995,25 @@
       e.preventDefault();
       triggerFullStrum('up', 0.8);
     } else if (KEY_TO_STRING[e.code] !== undefined) {
-      triggerStringPluck(KEY_TO_STRING[e.code], 0.85, 0, 'down');
+      const col = KEY_TO_STRING[e.code];
+      const stringIdx = state.leftHanded ? 5 - col : col;
+      triggerStringPluck(stringIdx, 0.85, 0, 'down');
     }
   });
 
   // --- Initialize ---
   let savedWidth = 76;
   let savedAlign = 'center';
+  let savedLefty = false;
   try {
     savedWidth = Number(localStorage.getItem('pocketGuitar.neckWidth')) || 76;
     savedAlign = localStorage.getItem('pocketGuitar.neckAlign') || 'center';
+    savedLefty = localStorage.getItem('pocketGuitar.leftHanded') === '1';
   } catch (_) {}
 
   buildUI();
   applyNeckLayout(savedWidth, savedAlign);
-  updateFretboardVisuals();
+  applyLeftHanded(savedLefty);
   requestAnimationFrame(() => {
     resizeCanvas();
     renderStringsLoop();

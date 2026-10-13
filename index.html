@@ -31,21 +31,21 @@
         </button>
       </div>
 
-      <!-- Secondary Toolbar: Tone, Capo, Hold Mode, Current Chord Indicator -->
+      <!-- Secondary Toolbar: Tone, Capo, Hold Mode, Left-Handed Mode, Current Chord Indicator -->
       <div class="subbar-row">
         <div class="control-group">
           <label class="control-label" for="tone-select">音色</label>
           <select id="tone-select" class="compact-select">
-            <option value="acoustic">Acoustic (アコギ)</option>
-            <option value="clean">Electric Clean</option>
-            <option value="drive">Overdrive (歪み)</option>
+            <option value="acoustic">Acoustic</option>
+            <option value="clean">Clean</option>
+            <option value="drive">Overdrive</option>
           </select>
         </div>
 
         <div class="control-group">
           <label class="control-label" for="capo-select">Capo</label>
           <select id="capo-select" class="compact-select">
-            <option value="0">なし (0)</option>
+            <option value="0">0</option>
             <option value="1">+1</option>
             <option value="2">+2</option>
             <option value="3">+3</option>
@@ -56,7 +56,12 @@
 
         <button type="button" id="hold-toggle-btn" class="pill-toggle" aria-pressed="false" title="タップしたフレットを押さえっぱなしにする固定モード">
           <span class="dot"></span>
-          指ホールド: <strong id="hold-state-text">OFF</strong>
+          ホールド: <strong id="hold-state-text">OFF</strong>
+        </button>
+
+        <button type="button" id="lefty-toggle-btn" class="pill-toggle" aria-pressed="false" title="弦の並びを左右反転（左から1弦〜6弦）にする左利き用モード">
+          <span class="dot"></span>
+          左利き
         </button>
 
         <div class="chord-readout" id="active-chord-badge" aria-live="polite">
@@ -64,29 +69,45 @@
         </div>
       </div>
 
-      <!-- Third Toolbar Row: String / Neck Width, Position & Left-Handed Mode -->
+      <!-- Third Toolbar Row: Volume & String / Neck Width Adjustment -->
       <div class="width-bar-row">
-        <label class="control-label" for="neck-width-slider">弦幅</label>
-        <input
-          type="range"
-          id="neck-width-slider"
-          class="width-slider"
-          min="50"
-          max="100"
-          step="2"
-          value="76"
-          aria-label="弦の間隔（ネック幅）の調節"
-        >
-        <span class="width-value" id="neck-width-value">76%</span>
-        <div class="align-switch" role="group" aria-label="ネックの寄せ位置">
-          <button type="button" class="align-btn" data-align="left" title="左寄せ">左</button>
-          <button type="button" class="align-btn active" data-align="center" title="中央">中</button>
-          <button type="button" class="align-btn" data-align="right" title="右寄せ">右</button>
+        <div class="slider-group">
+          <button type="button" id="mute-toggle-btn" class="icon-mute-btn" aria-pressed="false" title="ミュート切り替え" aria-label="ミュート切り替え">🔊</button>
+          <label class="control-label" for="volume-slider">音量</label>
+          <input
+            type="range"
+            id="volume-slider"
+            class="width-slider"
+            min="0"
+            max="100"
+            step="1"
+            value="85"
+            aria-label="マスター音量の調節"
+          >
+          <span class="width-value" id="volume-value">85%</span>
         </div>
-        <button type="button" id="lefty-toggle-btn" class="pill-toggle" aria-pressed="false" title="弦の並びを左右反転（左から1弦〜6弦）にする左利き用モード">
-          <span class="dot"></span>
-          左利き
-        </button>
+
+        <div class="slider-divider" aria-hidden="true"></div>
+
+        <div class="slider-group">
+          <label class="control-label" for="neck-width-slider">弦幅</label>
+          <input
+            type="range"
+            id="neck-width-slider"
+            class="width-slider"
+            min="50"
+            max="100"
+            step="2"
+            value="76"
+            aria-label="弦の間隔（ネック幅）の調節"
+          >
+          <span class="width-value" id="neck-width-value">76%</span>
+          <div class="align-switch" role="group" aria-label="ネックの寄せ位置">
+            <button type="button" class="align-btn" data-align="left" title="左寄せ">左</button>
+            <button type="button" class="align-btn active" data-align="center" title="中央">中</button>
+            <button type="button" class="align-btn" data-align="right" title="右寄せ">右</button>
+          </div>
+        </div>
       </div>
     </header>
 

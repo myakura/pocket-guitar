@@ -37,6 +37,8 @@
     mode: 'fretboard', // 'fretboard' | 'chord'
     tone: 'acoustic',  // 'acoustic' | 'clean' | 'drive'
     capo: 0,
+    volume: 85,
+    isMuted: false,
     holdMode: false,
     leftHanded: false,
     guideChordId: '',
@@ -70,12 +72,23 @@
       this.activeVoices = new Array(6).fill(null);
     }
 
+    getEffectiveGain() {
+      if (state.isMuted) return 0;
+      return Math.max(0, Math.min(1, state.volume / 100));
+    }
+
+    updateMasterGain() {
+      if (!this.ctx || !this.masterGain) return;
+      const target = this.getEffectiveGain();
+      this.masterGain.gain.setTargetAtTime(target, this.ctx.currentTime, 0.015);
+    }
+
     ensureContext() {
       if (!this.ctx) {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
         this.ctx = new AudioCtx();
         this.masterGain = this.ctx.createGain();
-        this.masterGain.gain.value = 0.85;
+        this.masterGain.gain.value = this.getEffectiveGain();
         this.masterGain.connect(this.ctx.destination);
         this.rebuildToneChain();
       }
@@ -834,10 +847,50 @@
 
   // --- Mode & Toolbar Controls ---
   const appShell = document.querySelector('.app-shell');
+  const volumeSlider = document.getElementById('volume-slider');
+  const volumeValue = document.getElementById('volume-value');
+  const muteToggleBtn = document.getElementById('mute-toggle-btn');
   const neckWidthSlider = document.getElementById('neck-width-slider');
   const neckWidthValue = document.getElementById('neck-width-value');
   const alignButtons = document.querySelectorAll('.align-btn');
   const leftyToggleBtn = document.getElementById('lefty-toggle-btn');
+
+  function applyVolume(volumePercent, isMuted = false) {
+    const clampedVol = Math.min(100, Math.max(0, Math.round(Number(volumePercent) ?? 85)));
+    state.volume = clampedVol;
+    state.isMuted = Boolean(isMuted) || clampedVol === 0;
+
+    if (volumeSlider) volumeSlider.value = String(clampedVol);
+    if (volumeValue) volumeValue.textContent = state.isMuted ? 'Mute' : `${clampedVol}%`;
+    if (muteToggleBtn) {
+      muteToggleBtn.setAttribute('aria-pressed', String(state.isMuted));
+      muteToggleBtn.textContent = state.isMuted ? '🔇' : clampedVol < 40 ? '🔉' : '🔊';
+    }
+
+    synth.updateMasterGain();
+
+    try {
+      localStorage.setItem('pocketGuitar.volume', String(clampedVol));
+      localStorage.setItem('pocketGuitar.muted', state.isMuted ? '1' : '0');
+    } catch (_) {}
+  }
+
+  if (volumeSlider) {
+    volumeSlider.addEventListener('input', () => {
+      const val = Number(volumeSlider.value);
+      applyVolume(val, val === 0);
+    });
+  }
+
+  if (muteToggleBtn) {
+    muteToggleBtn.addEventListener('click', () => {
+      if (state.isMuted && state.volume === 0) {
+        applyVolume(85, false);
+      } else {
+        applyVolume(state.volume, !state.isMuted);
+      }
+    });
+  }
 
   function applyNeckLayout(widthPercent, align) {
     const clampedWidth = Math.min(100, Math.max(50, Number(widthPercent) || 76));
@@ -1002,16 +1055,22 @@
   });
 
   // --- Initialize ---
+  let savedVolume = 85;
+  let savedMuted = false;
   let savedWidth = 76;
   let savedAlign = 'center';
   let savedLefty = false;
   try {
+    const rawVol = localStorage.getItem('pocketGuitar.volume');
+    if (rawVol !== null) savedVolume = Number(rawVol);
+    savedMuted = localStorage.getItem('pocketGuitar.muted') === '1';
     savedWidth = Number(localStorage.getItem('pocketGuitar.neckWidth')) || 76;
     savedAlign = localStorage.getItem('pocketGuitar.neckAlign') || 'center';
     savedLefty = localStorage.getItem('pocketGuitar.leftHanded') === '1';
   } catch (_) {}
 
   buildUI();
+  applyVolume(savedVolume, savedMuted);
   applyNeckLayout(savedWidth, savedAlign);
   applyLeftHanded(savedLefty);
   requestAnimationFrame(() => {

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Pocket Guitar — スマホ・ギター練習スタジオ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Top Control Bar -->
+    <header class="topbar">
+      <div class="topbar-row">
+        <div class="brand">
+          <span class="brand-icon" aria-hidden="true">🎸</span>
+          <h1 class="brand-title">Pocket Guitar</h1>
+        </div>
+
+        <!-- Mode Switcher: Fretboard vs Chord Mode -->
+        <div class="mode-switch" role="tablist" aria-label="演奏モード切り替え">
+          <button type="button" id="mode-fretboard-btn" class="mode-btn active" role="tab" aria-selected="true" data-mode="fretboard">
+            指板モード
+          </button>
+          <button type="button" id="mode-chord-btn" class="mode-btn" role="tab" aria-selected="false" data-mode="chord">
+            コードモード
+          </button>
+        </div>
+
+        <button type="button" class="help-btn" popovertarget="help-popover" aria-label="使い方を表示">
+          ？
+        </button>
+      </div>
+
+      <!-- Secondary Toolbar: Tone, Capo, Hold Mode, Current Chord Indicator -->
+      <div class="subbar-row">
+        <div class="control-group">
+          <label class="control-label" for="tone-select">音色</label>
+          <select id="tone-select" class="compact-select">
+            <option value="acoustic">Acoustic (アコギ)</option>
+            <option value="clean">Electric Clean</option>
+            <option value="drive">Overdrive (歪み)</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="capo-select">Capo</label>
+          <select id="capo-select" class="compact-select">
+            <option value="0">なし (0)</option>
+            <option value="1">+1</option>
+            <option value="2">+2</option>
+            <option value="3">+3</option>
+            <option value="4">+4</option>
+            <option value="5">+5</option>
+          </select>
+        </div>
+
+        <button type="button" id="hold-toggle-btn" class="pill-toggle" aria-pressed="false" title="タップしたフレットを押さえっぱなしにする固定モード">
+          <span class="dot"></span>
+          指ホールド: <strong id="hold-state-text">OFF</strong>
+        </button>
+
+        <div class="chord-readout" id="active-chord-badge" aria-live="polite">
+          Open
+        </div>
+      </div>
+
+      <!-- Third Toolbar Row: String / Neck Width & Position Adjustment -->
+      <div class="width-bar-row">
+        <label class="control-label" for="neck-width-slider">弦幅</label>
+        <input
+          type="range"
+          id="neck-width-slider"
+          class="width-slider"
+          min="50"
+          max="100"
+          step="2"
+          value="76"
+          aria-label="弦の間隔（ネック幅）の調節"
+        >
+        <span class="width-value" id="neck-width-value">76%</span>
+        <div class="align-switch" role="group" aria-label="ネックの寄せ位置">
+          <button type="button" class="align-btn" data-align="left" title="左寄せ">左</button>
+          <button type="button" class="align-btn active" data-align="center" title="中央">中</button>
+          <button type="button" class="align-btn" data-align="right" title="右寄せ">右</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- UPPER AREA: Left-hand Fretboard / Chord Selection -->
+    <main class="guitar-workspace">
+      <section class="upper-stage" aria-label="押弦・コードエリア">
+        <!-- Fretboard Mode View -->
+        <div id="fretboard-view" class="stage-view active">
+          <!-- Optional Chord Guide Bar for Fretboard Practice -->
+          <div class="guide-bar">
+            <span class="guide-label">ガイド表示:</span>
+            <div class="guide-chips" id="guide-chips">
+              <button type="button" class="guide-chip active" data-guide="">なし</button>
+              <button type="button" class="guide-chip" data-guide="C">C</button>
+              <button type="button" class="guide-chip" data-guide="G">G</button>
+              <button type="button" class="guide-chip" data-guide="Am">Am</button>
+              <button type="button" class="guide-chip" data-guide="F">F</button>
+              <button type="button" class="guide-chip" data-guide="Em">Em</button>
+              <button type="button" class="guide-chip" data-guide="D">D</button>
+              <button type="button" class="guide-chip" data-guide="Dm">Dm</button>
+              <button type="button" class="guide-chip" data-guide="E7">E7</button>
+            </div>
+            <button type="button" id="clear-frets-btn" class="clear-btn" title="押さえている弦をすべて開放に戻す">解除</button>
+          </div>
+
+          <div class="neck-stage-wrapper">
+            <div class="neck-track" id="upper-neck-track">
+              <!-- Nut / Open & Mute Bar (Fret 0) -->
+              <div class="nut-row" id="nut-row" aria-label="開放弦・ミュート切り替え">
+                <!-- Populated by JS for 6 strings -->
+              </div>
+
+              <!-- Interactive Fretboard Grid -->
+              <div class="fretboard-container" id="fretboard-container">
+                <div class="fret-numbers" aria-hidden="true">
+                  <span>1F</span>
+                  <span>2F</span>
+                  <span>3F</span>
+                  <span>4F</span>
+                  <span>5F</span>
+                </div>
+                <div class="fretboard-surface" id="fretboard-surface">
+                  <!-- Fret background lines & inlays -->
+                  <div class="fret-inlay fret-3"></div>
+                  <div class="fret-inlay fret-5"></div>
+                  <!-- Strings and Fret cells rendered by JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chord Mode View -->
+        <div id="chord-view" class="stage-view">
+          <div class="chord-mode-header">
+            <span class="chord-mode-hint">上のコードを押さえながら、下の弦をスワイプしてストローク！</span>
+            <label class="auto-strum-label">
+              <input type="checkbox" id="chord-tap-strum">
+              <span>押した時に軽く鳴らす</span>
+            </label>
+          </div>
+          <div class="chord-grid" id="chord-grid">
+            <!-- Chord pads populated by JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- LOWER AREA: Right-hand Strumming & Picking Zone -->
+      <section class="lower-stage" id="strum-stage" aria-label="ストラム・ピッキングエリア">
+        <div class="guitar-body-decor" aria-hidden="true">
+          <div class="soundhole-ring">
+            <div class="soundhole-inner"></div>
+          </div>
+          <div class="pickguard"></div>
+        </div>
+
+        <!-- Quick Strum Buttons for Accessibility / One-hand / PC -->
+        <div class="strum-assist-bar">
+          <button type="button" id="strum-down-btn" class="strum-action-btn" title="ダウンストローク (6弦→1弦)">
+            ▼ Down Strum
+          </button>
+          <span class="strum-instruction">横スワイプでストローク / 弦タップで単音ピッキング</span>
+          <button type="button" id="strum-up-btn" class="strum-action-btn" title="アップストローク (1弦→6弦)">
+            ▲ Up Strum
+          </button>
+        </div>
+
+        <!-- Interactive Strings Canvas + Hit Columns -->
+        <div class="strum-zone" id="strum-zone">
+          <canvas id="string-canvas" class="string-canvas"></canvas>
+          <div class="neck-track lower-neck-track" id="lower-neck-track">
+            <div class="strum-columns" id="strum-columns">
+              <!-- 6 string status indicators at the bridge -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Help Popover -->
+  <div id="help-popover" popover class="help-modal">
+    <div class="help-modal-header">
+      <h2>🎸 Pocket Guitar の使い方</h2>
+      <button type="button" popovertarget="help-popover" popovertargetaction="hide" class="close-popover-btn" aria-label="閉じる">✕</button>
+    </div>
+    <div class="help-modal-body">
+      <h3>📱 スマホでの基本操作</h3>
+      <ul>
+        <li><strong>画面上部（押弦エリア）</strong>：左手の指でフレットまたはコードボタンを押さえます。</li>
+        <li><strong>画面下部（ストラムエリア）</strong>：右手の指で弦を<strong>左右にスワイプ</strong>すると「ジャラーン」とストローク、<strong>各弦をタップ</strong>するとアルペジオ（単音ピッキング）ができます。</li>
+      </ul>
+      <h3>🔀 2つのモード</h3>
+      <ul>
+        <li><strong>指板モード</strong>：6本の弦（左が太い6弦E、右が細い1弦E）と1〜5フレットを直接押さえます。「ガイド表示」を選ぶと、コードの押さえ方が光って練習できます。「指ホールド: ON」にすると指を離しても押弦が維持されます。</li>
+        <li><strong>コードモード</strong>：C / G / Am / F などのコードボタンをタップ・長押しするだけで自動的に押弦され、下の弦を弾くだけで綺麗なコードが鳴ります。</li>
+      </ul>
+      <h3>💻 PCでのショートカット</h3>
+      <ul>
+        <li>数字キー <code>1</code>〜<code>9</code>：主要コード（C, G, Am, F, Em, D, Dm, E7, A）を切り替え</li>
+        <li><code>Space</code> または <code>↓</code>：ダウンストローク / <code>↑</code>：アップストローク</li>
+        <li><code>Q</code> <code>W</code> <code>E</code> <code>R</code> <code>T</code> <code>Y</code>：6弦〜1弦を個別にピッキング</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

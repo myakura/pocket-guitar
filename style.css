@@ -1,0 +1,863 @@
+:root {
+  --bg-dark: #12100e;
+  --panel-bg: #1c1815;
+  --panel-border: #332b24;
+  --wood-neck-top: #3b2618;
+  --wood-neck-bottom: #2a1a10;
+  --wood-body-outer: #5e3419;
+  --wood-body-inner: #8c5125;
+  --fret-wire: #b8b2a6;
+  --fret-wire-highlight: #e6dfd3;
+  --nut-bg: #e8dec8;
+  --text-main: #f5efe6;
+  --text-muted: #b0a392;
+  --accent-amber: #f59e0b;
+  --accent-amber-glow: rgba(245, 158, 11, 0.38);
+  --accent-cyan: #38bdf8;
+  --accent-cyan-glow: rgba(56, 189, 248, 0.35);
+  --accent-emerald: #10b981;
+  --danger-rose: #f43f5e;
+  --gutter-left: 30px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100dvh;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  overscroll-behavior: none;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 440px;
+  min-height: 700px;
+  height: 100dvh;
+  margin: 0 auto;
+  background: var(--panel-bg);
+  border-inline: 1px solid var(--panel-border);
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.75);
+}
+
+/* Header & Toolbars */
+.topbar {
+  flex-shrink: 0;
+  background: linear-gradient(180deg, #25201b 0%, #191512 100%);
+  border-bottom: 1px solid var(--panel-border);
+  padding: env(safe-area-inset-top, 6px) 10px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 20;
+}
+
+.topbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.brand-icon {
+  font-size: 1.15rem;
+}
+
+.brand-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #fde68a;
+  white-space: nowrap;
+}
+
+.mode-switch {
+  display: inline-flex;
+  background: #110e0c;
+  padding: 3px;
+  border-radius: 999px;
+  border: 1px solid #382f27;
+}
+
+.mode-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.mode-btn.active {
+  background: var(--accent-amber);
+  color: #17120e;
+  box-shadow: 0 1px 6px var(--accent-amber-glow);
+}
+
+.help-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #473c33;
+  background: #2b241e;
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.subbar-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.control-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.control-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.compact-select {
+  background: #120f0d;
+  color: var(--text-main);
+  border: 1px solid #3c322a;
+  border-radius: 6px;
+  padding: 3px 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.pill-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #14110e;
+  color: var(--text-muted);
+  border: 1px solid #3c322a;
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 0.74rem;
+  cursor: pointer;
+}
+
+.pill-toggle .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #574b40;
+}
+
+.pill-toggle[aria-pressed="true"] {
+  border-color: var(--accent-emerald);
+  color: #d1fae5;
+  background: rgba(16, 185, 129, 0.14);
+}
+
+.pill-toggle[aria-pressed="true"] .dot {
+  background: var(--accent-emerald);
+  box-shadow: 0 0 6px var(--accent-emerald);
+}
+
+.chord-readout {
+  min-width: 58px;
+  text-align: center;
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fcd34d;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+/* Width & Alignment Control Row */
+.width-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.width-slider {
+  flex: 1;
+  accent-color: var(--accent-amber);
+  height: 5px;
+  cursor: pointer;
+}
+
+.width-value {
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #fde68a;
+  min-width: 34px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.align-switch {
+  display: inline-flex;
+  background: #120f0d;
+  border: 1px solid #3c322a;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.align-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  cursor: pointer;
+}
+
+.align-btn.active {
+  background: var(--accent-amber);
+  color: #17120e;
+}
+
+/* Main Split Workspace */
+.guitar-workspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 600px;
+  overflow: hidden;
+}
+
+/* UPPER STAGE: Fretboard or Chord Pads */
+.upper-stage {
+  flex: 1.15;
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border-bottom: 3px solid #0e0b09;
+  background: #1a1512;
+}
+
+.stage-view {
+  display: none;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.stage-view.active {
+  display: flex;
+}
+
+/* Guide Bar in Fretboard Mode */
+.guide-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  background: #16120f;
+  border-bottom: 1px solid #2d251e;
+  flex-shrink: 0;
+}
+
+.guide-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.guide-chips {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  flex: 1;
+  scrollbar-width: none;
+}
+
+.guide-chips::-webkit-scrollbar {
+  display: none;
+}
+
+.guide-chip {
+  appearance: none;
+  border: 1px solid #3b3129;
+  background: #241e19;
+  color: var(--text-muted);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.guide-chip.active {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: var(--accent-cyan);
+  color: #e0f2fe;
+}
+
+.clear-btn {
+  appearance: none;
+  border: 1px solid #473930;
+  background: #2c231d;
+  color: #fda4af;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Adjustable Neck Wrapper & Track */
+.neck-stage-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: var(--neck-justify, center);
+  min-height: 0;
+  background: radial-gradient(circle at 50% 50%, #191410 0%, #0e0b09 100%);
+  overflow: hidden;
+}
+
+.neck-track {
+  width: var(--neck-width, 76%);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-inline: 2px solid #4a3828;
+  box-shadow: 0 0 24px rgba(0, 0, 0, 0.75);
+  transition: width 0.08s ease-out;
+}
+
+/* Nut Row (Open / Mute controls aligned with 6 strings) */
+.nut-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  padding-left: var(--gutter-left);
+  background: linear-gradient(180deg, #ede3cf 0%, #cfc1a6 100%);
+  border-bottom: 4px solid #756852;
+  flex-shrink: 0;
+  touch-action: none;
+}
+
+.nut-cell {
+  appearance: none;
+  border: none;
+  border-right: 1px solid rgba(90, 74, 52, 0.25);
+  background: transparent;
+  padding: 4px 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #2b2118;
+  touch-action: none;
+}
+
+.nut-cell:last-child {
+  border-right: none;
+}
+
+.nut-string-name {
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.nut-status {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 1px 6px;
+  border-radius: 999px;
+  margin-top: 1px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.nut-cell.is-muted .nut-status {
+  background: var(--danger-rose);
+  color: #fff;
+}
+
+.nut-cell.is-fretted .nut-status {
+  background: var(--accent-amber);
+  color: #1c140d;
+}
+
+/* Fretboard Container */
+.fretboard-container {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  position: relative;
+  background: linear-gradient(90deg, #2d1c10 0%, #3e2818 50%, #2a190e 100%);
+  touch-action: none;
+}
+
+.fret-numbers {
+  width: var(--gutter-left);
+  flex-shrink: 0;
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+  background: #17120e;
+  border-right: 2px solid #4a3828;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.fret-numbers span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #2b221b;
+}
+
+.fretboard-surface {
+  flex: 1;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Pearl Fret Inlays at 3rd and 5th frets */
+.fret-inlay {
+  position: absolute;
+  left: 50%;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.38), rgba(210, 200, 185, 0.16));
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.fret-inlay.fret-3 {
+  top: 50%;
+}
+
+.fret-inlay.fret-5 {
+  top: 90%;
+}
+
+/* Individual Fret Cell */
+.fret-cell {
+  position: relative;
+  border-bottom: 3px solid var(--fret-wire);
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  touch-action: none;
+}
+
+/* Vertical String Line inside Fretboard */
+.fret-cell::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--string-width, 2px);
+  background: var(--string-color, #d6d3cd);
+  box-shadow: 1px 0 3px rgba(0, 0, 0, 0.65);
+  pointer-events: none;
+}
+
+/* Finger Marker / Guide Dot */
+.fret-marker {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.76rem;
+  font-weight: 800;
+  opacity: 0;
+  transform: scale(0.65);
+  transition: transform 0.08s ease-out, opacity 0.08s ease-out;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Guide Highlight State */
+.fret-cell.is-guide .fret-marker {
+  opacity: 0.88;
+  transform: scale(0.86);
+  border: 2px dashed var(--accent-cyan);
+  background: rgba(56, 189, 248, 0.2);
+  color: #e0f2fe;
+  box-shadow: 0 0 10px var(--accent-cyan-glow);
+}
+
+/* Active Pressed Fret State */
+.fret-cell.is-pressed .fret-marker {
+  opacity: 1;
+  transform: scale(1);
+  border: 2px solid #fffbeb;
+  background: radial-gradient(circle at 30% 30%, #fbbf24, #d97706);
+  color: #1c130b;
+  box-shadow: 0 0 14px var(--accent-amber-glow);
+}
+
+/* CHORD MODE VIEW */
+.chord-mode-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  background: #16120f;
+  border-bottom: 1px solid #2d251e;
+  flex-shrink: 0;
+}
+
+.chord-mode-hint {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.auto-strum-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.74rem;
+  color: #fde68a;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.chord-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 7px;
+  padding: 8px;
+  background: #181310;
+  touch-action: none;
+}
+
+.chord-pad {
+  appearance: none;
+  border: 1px solid #3f332a;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #2b231d 0%, #1f1915 100%);
+  color: var(--text-main);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 6px 4px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  transition: transform 0.08s, border-color 0.1s, background 0.1s;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.chord-pad:active,
+.chord-pad.active {
+  transform: translateY(1px) scale(0.98);
+  border-color: var(--accent-amber);
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.34) 0%, rgba(180, 83, 9, 0.28) 100%);
+  box-shadow: 0 0 14px var(--accent-amber-glow);
+}
+
+.chord-pad-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fef3c7;
+}
+
+.chord-pad-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.chord-pad-voicing {
+  font-size: 0.72rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: #fcd34d;
+  letter-spacing: 0.08em;
+}
+
+/* LOWER STAGE: Strumming & Picking Zone */
+.lower-stage {
+  flex: 0.95;
+  min-height: 270px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(circle at 50% 52%, var(--wood-body-inner) 0%, var(--wood-body-outer) 62%, #29160b 100%);
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* Acoustic Guitar Soundhole & Pickguard Decoration */
+.guitar-body-decor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.soundhole-ring {
+  width: min(56vw, 220px);
+  height: min(56vw, 220px);
+  border-radius: 50%;
+  padding: 10px;
+  border: 3px dashed rgba(245, 222, 179, 0.32);
+  box-shadow: 0 0 0 5px rgba(30, 15, 6, 0.55), inset 0 0 0 3px rgba(245, 222, 179, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.soundhole-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #170e09 0%, #090503 85%);
+  box-shadow: inset 0 10px 24px rgba(0, 0, 0, 0.9);
+}
+
+.pickguard {
+  position: absolute;
+  right: 6%;
+  bottom: 10%;
+  width: 28%;
+  height: 52%;
+  background: linear-gradient(135deg, #2b1109 0%, #170804 100%);
+  border-radius: 60% 35% 50% 40%;
+  opacity: 0.72;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Strum Assist Bar */
+.strum-assist-bar {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 5px 8px;
+  background: rgba(15, 10, 7, 0.68);
+  backdrop-filter: blur(4px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.strum-action-btn {
+  appearance: none;
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  background: rgba(38, 25, 16, 0.88);
+  color: #fde68a;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.strum-action-btn:active {
+  background: var(--accent-amber);
+  color: #1a120b;
+}
+
+.strum-instruction {
+  font-size: 0.72rem;
+  color: #e7d8c5;
+  text-align: center;
+  flex: 1;
+}
+
+/* Interactive Strum Zone */
+.strum-zone {
+  position: relative;
+  flex: 1;
+  display: flex;
+  justify-content: var(--neck-justify, center);
+  cursor: grab;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.strum-zone:active {
+  cursor: grabbing;
+}
+
+.lower-neck-track {
+  padding-left: var(--gutter-left);
+  border-inline: 1px dashed rgba(255, 255, 255, 0.14);
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.string-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.strum-columns {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  align-items: end;
+  padding-bottom: max(env(safe-area-inset-bottom, 8px), 8px);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.bridge-pin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.bridge-note-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(18, 13, 10, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fef3c7;
+  transition: transform 0.1s, background-color 0.1s;
+}
+
+.bridge-pin.plucked .bridge-note-badge {
+  background: var(--accent-amber);
+  color: #1a120b;
+  transform: scale(1.12);
+}
+
+.bridge-pin.is-muted .bridge-note-badge {
+  background: rgba(244, 63, 94, 0.25);
+  border-color: var(--danger-rose);
+  color: #fda4af;
+}
+
+/* Help Popover Modal */
+.help-modal {
+  margin: auto;
+  width: min(92vw, 440px);
+  max-height: 82dvh;
+  overflow-y: auto;
+  background: #211b17;
+  color: var(--text-main);
+  border: 1px solid #4d3e32;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+}
+
+.help-modal::backdrop {
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(3px);
+}
+
+.help-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #382e25;
+}
+
+.help-modal-header h2 {
+  font-size: 1rem;
+  color: #fde68a;
+}
+
+.close-popover-btn {
+  appearance: none;
+  border: none;
+  background: #332921;
+  color: var(--text-main);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.help-modal-body h3 {
+  font-size: 0.86rem;
+  color: #fcd34d;
+  margin: 10px 0 4px;
+}
+
+.help-modal-body ul {
+  padding-left: 18px;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: #e7ddd0;
+}
+
+.help-modal-body code {
+  background: #120e0c;
+  padding: 1px 5px;
+  border-radius: 4px;
+  color: #fde68a;
+}

@@ -1,21 +1,29 @@
 # Pocket Guitar 🎸
 
-スマートフォン向けの縦画面レイアウトをベースにした、Web Audio API（Karplus-Strong法による物理モデリング音源）搭載のギター練習ウェブアプリです。外部ライブラリや音声ファイルを使わず、ブラウザ単体で動作します。
+A mobile-first guitar practice web application powered by a Web Audio API Karplus-Strong physical modeling synthesizer. Runs directly in any modern browser with zero external dependencies or audio sample files.
 
-## 主な機能
+## Features
 
-- **2つの演奏モード切り替え**
-  - **指板モード (Fretboard Mode)**：6本の弦（6E〜1E）と1〜5フレットをマルチタッチで直接押さえて演奏。コードフォームのガイド表示（C, G, Am, F, Em, D, Dm, E7）や、片手・PCでも押弦を維持できる「指ホールド」機能、開放弦／ミュート（✕）切り替えに対応。
-  - **コードモード (Chord Mode)**：主要12コードのパッドをタップ・長押しするだけで自動押弦し、下部エリアのストロークに集中できるモード。
-- **ストラム＆ピッキングエリア**
-  - 画面下部のサウンドホール上の弦を左右にスワイプしてストローク、各弦をタップして単音ピッキング（アルペジオ）が可能。
-- **スマホ画面サイズ・利き手に合わせた調節**
-  - 大型スマホでも実物のギターに近い弦間隔で押さえられるよう、ネック幅（`50%`〜`100%`）のスライダー調節と寄せ位置（`左` / `中` / `右`）の切り替えに対応。
-  - **左利き（レフティ）モード**：ワンタップで弦の並び順（通常：左から `6E〜1E` ⇄ 左利き：左から `1E〜6E`）、コード表記、ピックガード位置を左右反転（設定はすべて `localStorage` に自動保存）。
-- **音色・音量・カポタスト設定**
-  - マスター音量スライダー（`0%`〜`100%`）＆ワンタップ消音（ミュート）ボタン。
-  - `Acoustic` / `Electric Clean` / `Overdrive` の3音色と、`Capo 0`〜`+5` の移調に対応。
+- **Two Play Modes**
+  - **Fretboard Mode**: Press directly on the 6 strings (`6E`–`1E`) across frets `1`–`5` with multi-touch support. Includes chord shape guides (`C`, `G`, `Am`, `F`, `Em`, `D`, `Dm`, `E7`), a **Hold** latch mode for one-handed or desktop play, and per-string open/mute (`✕`) nut toggles.
+  - **Chords Mode**: Tap any of 12 common chord pads (`C`, `G`, `Am`, `F`, `Em`, `D`, `Dm`, `E7`, `A`, `G7`, `Cadd9`, `Bm`) to automatically fret the voicing and focus on strumming in the lower area.
+- **Interactive Strum & Picking Zone**
+  - Swipe horizontally across the strings over the soundhole to strum, or tap individual strings to pick arpeggios with standing-wave visual string vibration.
+- **Ergonomic Sizing & Left-Handed Support**
+  - **Adjustable String Spacing (`Width`)**: Narrow the neck width (`50%`–`100%`) and align it (`L` / `C` / `R`) so large smartphone screens match realistic guitar string spacing.
+  - **Left-Handed (`Lefty`) Mode**: One-tap toggle to mirror string order (`6E→1E` ⇄ `1E→6E`), chord voicings, and pickguard orientation.
+- **Sound & Capo Controls**
+  - Master volume slider (`0%`–`100%`) with one-tap mute button.
+  - Three built-in tones (`Acoustic`, `Clean`, `Overdrive`) and `Capo 0`–`+5` transposition.
+  - Preferences (`Vol`, `Mute`, `Width`, `Align`, `Lefty`) are automatically persisted in `localStorage`.
 
-## 使い方
+## Keyboard Shortcuts (Desktop)
 
-`index.html` をブラウザで直接開くか、任意のローカルサーバーで配信してアクセスしてください。
+- `1`–`9`: Select chords (`C`, `G`, `Am`, `F`, `Em`, `D`, `Dm`, `E7`, `A`)
+- `Space` or `↓`: Down Strum / `↑`: Up Strum
+- `Q` `W` `E` `R` `T` `Y`: Pluck individual strings from left to right
+
+## Usage
+
+Open `index.html` directly in a web browser or serve the directory with any static HTTP server.
+

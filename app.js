@@ -16,18 +16,18 @@
 
   // Voicings: array of 6 values [6E, 5A, 4D, 3G, 2B, 1E], -1 = muted (X), 0 = open, 1..5 = fret
   const CHORD_LIBRARY = [
-    { id: 'C',     name: 'C',     sub: 'メジャー',     frets: [-1, 3, 2, 0, 1, 0] },
-    { id: 'G',     name: 'G',     sub: 'メジャー',     frets: [ 3, 2, 0, 0, 0, 3] },
-    { id: 'Am',    name: 'Am',    sub: 'マイナー',     frets: [-1, 0, 2, 2, 1, 0] },
-    { id: 'F',     name: 'F',     sub: '制覇 / 簡単F', frets: [ 1, 3, 3, 2, 1, 1] },
-    { id: 'Em',    name: 'Em',    sub: 'マイナー',     frets: [ 0, 2, 2, 0, 0, 0] },
-    { id: 'D',     name: 'D',     sub: 'メジャー',     frets: [-1,-1, 0, 2, 3, 2] },
-    { id: 'Dm',    name: 'Dm',    sub: 'マイナー',     frets: [-1,-1, 0, 2, 3, 1] },
-    { id: 'E7',    name: 'E7',    sub: 'セブンス',     frets: [ 0, 2, 0, 1, 0, 0] },
-    { id: 'A',     name: 'A',     sub: 'メジャー',     frets: [-1, 0, 2, 2, 2, 0] },
-    { id: 'G7',    name: 'G7',    sub: 'セブンス',     frets: [ 3, 2, 0, 0, 0, 1] },
-    { id: 'Cadd9', name: 'Cadd9', sub: 'アドナインス', frets: [-1, 3, 2, 0, 3, 3] },
-    { id: 'Bm',    name: 'Bm',    sub: 'マイナー(簡易)', frets: [-1, 2, 4, 4, 3, 2] },
+    { id: 'C',     name: 'C',     sub: 'Major',        frets: [-1, 3, 2, 0, 1, 0] },
+    { id: 'G',     name: 'G',     sub: 'Major',        frets: [ 3, 2, 0, 0, 0, 3] },
+    { id: 'Am',    name: 'Am',    sub: 'Minor',        frets: [-1, 0, 2, 2, 1, 0] },
+    { id: 'F',     name: 'F',     sub: 'Barre / F',    frets: [ 1, 3, 3, 2, 1, 1] },
+    { id: 'Em',    name: 'Em',    sub: 'Minor',        frets: [ 0, 2, 2, 0, 0, 0] },
+    { id: 'D',     name: 'D',     sub: 'Major',        frets: [-1,-1, 0, 2, 3, 2] },
+    { id: 'Dm',    name: 'Dm',    sub: 'Minor',        frets: [-1,-1, 0, 2, 3, 1] },
+    { id: 'E7',    name: 'E7',    sub: 'Dominant 7th', frets: [ 0, 2, 0, 1, 0, 0] },
+    { id: 'A',     name: 'A',     sub: 'Major',        frets: [-1, 0, 2, 2, 2, 0] },
+    { id: 'G7',    name: 'G7',    sub: 'Dominant 7th', frets: [ 3, 2, 0, 0, 0, 1] },
+    { id: 'Cadd9', name: 'Cadd9', sub: 'Add9',         frets: [-1, 3, 2, 0, 3, 3] },
+    { id: 'Bm',    name: 'Bm',    sub: 'Minor (Easy)', frets: [-1, 2, 4, 4, 3, 2] },
   ];
 
   const CHORD_MAP = Object.fromEntries(CHORD_LIBRARY.map((c) => [c.id, c]));
@@ -420,7 +420,7 @@
       btn.type = 'button';
       btn.className = 'nut-cell';
       btn.dataset.string = String(s);
-      btn.setAttribute('aria-label', `${STRINGS[s].label}弦 開放・ミュート切替`);
+      btn.setAttribute('aria-label', `Toggle open or mute for string ${STRINGS[s].label}`);
       btn.innerHTML = `
         <span class="nut-string-name">${STRINGS[s].label}</span>
         <span class="nut-status">0</span>
@@ -675,7 +675,7 @@
   function triggerFullStrum(direction = 'down', velocity = 0.82) {
     synth.ensureContext();
     const order = direction === 'down' ? [0, 1, 2, 3, 4, 5] : [5, 4, 3, 2, 1, 0];
-    const stepDelay = 0.022; // 22ms arpeggiated roll per string ("ジャラーン")
+    const stepDelay = 0.022; // 22ms arpeggiated roll per string
     order.forEach((stringIdx, idx) => {
       // Slight human velocity curve across strings
       const strVel = Math.min(1, velocity * (0.9 + idx * 0.025));

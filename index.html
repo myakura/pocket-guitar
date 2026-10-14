@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Pocket Guitar — スマホ・ギター練習スタジオ</title>
+  <title>Pocket Guitar — Mobile Guitar Practice Studio</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -17,24 +17,24 @@
         </div>
 
         <!-- Mode Switcher: Fretboard vs Chord Mode -->
-        <div class="mode-switch" role="tablist" aria-label="演奏モード切り替え">
+        <div class="mode-switch" role="tablist" aria-label="Play Mode Switcher">
           <button type="button" id="mode-fretboard-btn" class="mode-btn active" role="tab" aria-selected="true" data-mode="fretboard">
-            指板モード
+            Fretboard
           </button>
           <button type="button" id="mode-chord-btn" class="mode-btn" role="tab" aria-selected="false" data-mode="chord">
-            コードモード
+            Chords
           </button>
         </div>
 
-        <button type="button" class="help-btn" popovertarget="help-popover" aria-label="使い方を表示">
-          ？
+        <button type="button" class="help-btn" popovertarget="help-popover" aria-label="How to Play">
+          ?
         </button>
       </div>
 
       <!-- Secondary Toolbar: Tone, Capo, Hold Mode, Left-Handed Mode, Current Chord Indicator -->
       <div class="subbar-row">
         <div class="control-group">
-          <label class="control-label" for="tone-select">音色</label>
+          <label class="control-label" for="tone-select">Tone</label>
           <select id="tone-select" class="compact-select">
             <option value="acoustic">Acoustic</option>
             <option value="clean">Clean</option>
@@ -54,14 +54,14 @@
           </select>
         </div>
 
-        <button type="button" id="hold-toggle-btn" class="pill-toggle" aria-pressed="false" title="タップしたフレットを押さえっぱなしにする固定モード">
+        <button type="button" id="hold-toggle-btn" class="pill-toggle" aria-pressed="false" title="Latch tapped frets so they stay pressed">
           <span class="dot"></span>
-          ホールド: <strong id="hold-state-text">OFF</strong>
+          Hold: <strong id="hold-state-text">OFF</strong>
         </button>
 
-        <button type="button" id="lefty-toggle-btn" class="pill-toggle" aria-pressed="false" title="弦の並びを左右反転（左から1弦〜6弦）にする左利き用モード">
+        <button type="button" id="lefty-toggle-btn" class="pill-toggle" aria-pressed="false" title="Left-handed mode: reverse string order (1E to 6E from left to right)">
           <span class="dot"></span>
-          左利き
+          Lefty
         </button>
 
         <div class="chord-readout" id="active-chord-badge" aria-live="polite">
@@ -72,8 +72,8 @@
       <!-- Third Toolbar Row: Volume & String / Neck Width Adjustment -->
       <div class="width-bar-row">
         <div class="slider-group">
-          <button type="button" id="mute-toggle-btn" class="icon-mute-btn" aria-pressed="false" title="ミュート切り替え" aria-label="ミュート切り替え">🔊</button>
-          <label class="control-label" for="volume-slider">音量</label>
+          <button type="button" id="mute-toggle-btn" class="icon-mute-btn" aria-pressed="false" title="Toggle Mute" aria-label="Toggle Mute">🔊</button>
+          <label class="control-label" for="volume-slider">Vol</label>
           <input
             type="range"
             id="volume-slider"
@@ -82,7 +82,7 @@
             max="100"
             step="1"
             value="85"
-            aria-label="マスター音量の調節"
+            aria-label="Master Volume"
           >
           <span class="width-value" id="volume-value">85%</span>
         </div>
@@ -90,7 +90,7 @@
         <div class="slider-divider" aria-hidden="true"></div>
 
         <div class="slider-group">
-          <label class="control-label" for="neck-width-slider">弦幅</label>
+          <label class="control-label" for="neck-width-slider">Width</label>
           <input
             type="range"
             id="neck-width-slider"
@@ -99,13 +99,13 @@
             max="100"
             step="2"
             value="76"
-            aria-label="弦の間隔（ネック幅）の調節"
+            aria-label="String spacing (neck width)"
           >
           <span class="width-value" id="neck-width-value">76%</span>
-          <div class="align-switch" role="group" aria-label="ネックの寄せ位置">
-            <button type="button" class="align-btn" data-align="left" title="左寄せ">左</button>
-            <button type="button" class="align-btn active" data-align="center" title="中央">中</button>
-            <button type="button" class="align-btn" data-align="right" title="右寄せ">右</button>
+          <div class="align-switch" role="group" aria-label="Neck alignment">
+            <button type="button" class="align-btn" data-align="left" title="Align Left">L</button>
+            <button type="button" class="align-btn active" data-align="center" title="Align Center">C</button>
+            <button type="button" class="align-btn" data-align="right" title="Align Right">R</button>
           </div>
         </div>
       </div>
@@ -113,14 +113,14 @@
 
     <!-- UPPER AREA: Left-hand Fretboard / Chord Selection -->
     <main class="guitar-workspace">
-      <section class="upper-stage" aria-label="押弦・コードエリア">
+      <section class="upper-stage" aria-label="Fretboard and Chord Area">
         <!-- Fretboard Mode View -->
         <div id="fretboard-view" class="stage-view active">
           <!-- Optional Chord Guide Bar for Fretboard Practice -->
           <div class="guide-bar">
-            <span class="guide-label">ガイド表示:</span>
+            <span class="guide-label">Guide:</span>
             <div class="guide-chips" id="guide-chips">
-              <button type="button" class="guide-chip active" data-guide="">なし</button>
+              <button type="button" class="guide-chip active" data-guide="">None</button>
               <button type="button" class="guide-chip" data-guide="C">C</button>
               <button type="button" class="guide-chip" data-guide="G">G</button>
               <button type="button" class="guide-chip" data-guide="Am">Am</button>
@@ -130,13 +130,13 @@
               <button type="button" class="guide-chip" data-guide="Dm">Dm</button>
               <button type="button" class="guide-chip" data-guide="E7">E7</button>
             </div>
-            <button type="button" id="clear-frets-btn" class="clear-btn" title="押さえている弦をすべて開放に戻す">解除</button>
+            <button type="button" id="clear-frets-btn" class="clear-btn" title="Reset all strings to open">Clear</button>
           </div>
 
           <div class="neck-stage-wrapper">
             <div class="neck-track" id="upper-neck-track">
               <!-- Nut / Open & Mute Bar (Fret 0) -->
-              <div class="nut-row" id="nut-row" aria-label="開放弦・ミュート切り替え">
+              <div class="nut-row" id="nut-row" aria-label="Open string and mute toggles">
                 <!-- Populated by JS for 6 strings -->
               </div>
 
@@ -163,10 +163,10 @@
         <!-- Chord Mode View -->
         <div id="chord-view" class="stage-view">
           <div class="chord-mode-header">
-            <span class="chord-mode-hint">上のコードを押さえながら、下の弦をスワイプしてストローク！</span>
+            <span class="chord-mode-hint">Select a chord above, then swipe the strings below to strum!</span>
             <label class="auto-strum-label">
               <input type="checkbox" id="chord-tap-strum">
-              <span>押した時に軽く鳴らす</span>
+              <span>Strum on tap</span>
             </label>
           </div>
           <div class="chord-grid" id="chord-grid">
@@ -176,7 +176,7 @@
       </section>
 
       <!-- LOWER AREA: Right-hand Strumming & Picking Zone -->
-      <section class="lower-stage" id="strum-stage" aria-label="ストラム・ピッキングエリア">
+      <section class="lower-stage" id="strum-stage" aria-label="Strumming and Picking Area">
         <div class="guitar-body-decor" aria-hidden="true">
           <div class="soundhole-ring">
             <div class="soundhole-inner"></div>
@@ -186,11 +186,11 @@
 
         <!-- Quick Strum Buttons for Accessibility / One-hand / PC -->
         <div class="strum-assist-bar">
-          <button type="button" id="strum-down-btn" class="strum-action-btn" title="ダウンストローク (6弦→1弦)">
+          <button type="button" id="strum-down-btn" class="strum-action-btn" title="Down Strum (6E → 1E)">
             ▼ Down Strum
           </button>
-          <span class="strum-instruction">横スワイプでストローク / 弦タップで単音ピッキング</span>
-          <button type="button" id="strum-up-btn" class="strum-action-btn" title="アップストローク (1弦→6弦)">
+          <span class="strum-instruction">Swipe horizontally to strum / Tap strings to pick</span>
+          <button type="button" id="strum-up-btn" class="strum-action-btn" title="Up Strum (1E → 6E)">
             ▲ Up Strum
           </button>
         </div>
@@ -211,25 +211,25 @@
   <!-- Help Popover -->
   <div id="help-popover" popover class="help-modal">
     <div class="help-modal-header">
-      <h2>🎸 Pocket Guitar の使い方</h2>
-      <button type="button" popovertarget="help-popover" popovertargetaction="hide" class="close-popover-btn" aria-label="閉じる">✕</button>
+      <h2>🎸 How to Play Pocket Guitar</h2>
+      <button type="button" popovertarget="help-popover" popovertargetaction="hide" class="close-popover-btn" aria-label="Close">✕</button>
     </div>
     <div class="help-modal-body">
-      <h3>📱 スマホでの基本操作</h3>
+      <h3>📱 Touch Controls</h3>
       <ul>
-        <li><strong>画面上部（押弦エリア）</strong>：左手の指でフレットまたはコードボタンを押さえます。</li>
-        <li><strong>画面下部（ストラムエリア）</strong>：右手の指で弦を<strong>左右にスワイプ</strong>すると「ジャラーン」とストローク、<strong>各弦をタップ</strong>するとアルペジオ（単音ピッキング）ができます。</li>
+        <li><strong>Upper Area (Frets / Chords)</strong>: Press frets or tap chord pads with your fretting hand.</li>
+        <li><strong>Lower Area (Strum Zone)</strong>: <strong>Swipe horizontally</strong> across the strings to strum, or <strong>tap individual strings</strong> to pick arpeggios.</li>
       </ul>
-      <h3>🔀 2つのモード</h3>
+      <h3>🔀 Two Play Modes</h3>
       <ul>
-        <li><strong>指板モード</strong>：6本の弦（左が太い6弦E、右が細い1弦E）と1〜5フレットを直接押さえます。「ガイド表示」を選ぶと、コードの押さえ方が光って練習できます。「指ホールド: ON」にすると指を離しても押弦が維持されます。</li>
-        <li><strong>コードモード</strong>：C / G / Am / F などのコードボタンをタップ・長押しするだけで自動的に押弦され、下の弦を弾くだけで綺麗なコードが鳴ります。</li>
+        <li><strong>Fretboard Mode</strong>: Press directly on the 6 strings (6E on the left to 1E on the right, or reversed in <strong>Lefty</strong> mode) across frets 1–5. Use <strong>Guide</strong> to highlight chord shapes, and toggle <strong>Hold: ON</strong> to latch frets without holding your fingers down.</li>
+        <li><strong>Chords Mode</strong>: Tap any chord pad (C, G, Am, F, etc.) to automatically fret that voicing so you can focus on strumming rhythm below.</li>
       </ul>
-      <h3>💻 PCでのショートカット</h3>
+      <h3>💻 Keyboard Shortcuts</h3>
       <ul>
-        <li>数字キー <code>1</code>〜<code>9</code>：主要コード（C, G, Am, F, Em, D, Dm, E7, A）を切り替え</li>
-        <li><code>Space</code> または <code>↓</code>：ダウンストローク / <code>↑</code>：アップストローク</li>
-        <li><code>Q</code> <code>W</code> <code>E</code> <code>R</code> <code>T</code> <code>Y</code>：6弦〜1弦を個別にピッキング</li>
+        <li>Number keys <code>1</code>–<code>9</code>: Select chords (C, G, Am, F, Em, D, Dm, E7, A)</li>
+        <li><code>Space</code> or <code>↓</code>: Down Strum / <code>↑</code>: Up Strum</li>
+        <li><code>Q</code> <code>W</code> <code>E</code> <code>R</code> <code>T</code> <code>Y</code>: Pluck individual strings from left to right</li>
       </ul>
     </div>
   </div>

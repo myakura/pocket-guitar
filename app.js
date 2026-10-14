@@ -16,18 +16,18 @@
 
   // Voicings: array of 6 values [6E, 5A, 4D, 3G, 2B, 1E], -1 = muted (X), 0 = open, 1..5 = fret
   const CHORD_LIBRARY = [
-    { id: 'C',     name: 'C',     sub: 'Major',        frets: [-1, 3, 2, 0, 1, 0] },
-    { id: 'G',     name: 'G',     sub: 'Major',        frets: [ 3, 2, 0, 0, 0, 3] },
-    { id: 'Am',    name: 'Am',    sub: 'Minor',        frets: [-1, 0, 2, 2, 1, 0] },
-    { id: 'F',     name: 'F',     sub: 'Barre / F',    frets: [ 1, 3, 3, 2, 1, 1] },
-    { id: 'Em',    name: 'Em',    sub: 'Minor',        frets: [ 0, 2, 2, 0, 0, 0] },
-    { id: 'D',     name: 'D',     sub: 'Major',        frets: [-1,-1, 0, 2, 3, 2] },
-    { id: 'Dm',    name: 'Dm',    sub: 'Minor',        frets: [-1,-1, 0, 2, 3, 1] },
-    { id: 'E7',    name: 'E7',    sub: 'Dominant 7th', frets: [ 0, 2, 0, 1, 0, 0] },
-    { id: 'A',     name: 'A',     sub: 'Major',        frets: [-1, 0, 2, 2, 2, 0] },
-    { id: 'G7',    name: 'G7',    sub: 'Dominant 7th', frets: [ 3, 2, 0, 0, 0, 1] },
-    { id: 'Cadd9', name: 'Cadd9', sub: 'Add9',         frets: [-1, 3, 2, 0, 3, 3] },
-    { id: 'Bm',    name: 'Bm',    sub: 'Minor (Easy)', frets: [-1, 2, 4, 4, 3, 2] },
+    { id: 'C',     name: 'C',     sub: 'C · E · G',      frets: [-1, 3, 2, 0, 1, 0] },
+    { id: 'G',     name: 'G',     sub: 'G · B · D',      frets: [ 3, 2, 0, 0, 0, 3] },
+    { id: 'Am',    name: 'Am',    sub: 'A · C · E',      frets: [-1, 0, 2, 2, 1, 0] },
+    { id: 'F',     name: 'F',     sub: 'F · A · C',      frets: [ 1, 3, 3, 2, 1, 1] },
+    { id: 'Em',    name: 'Em',    sub: 'E · G · B',      frets: [ 0, 2, 2, 0, 0, 0] },
+    { id: 'D',     name: 'D',     sub: 'D · F♯ · A',     frets: [-1,-1, 0, 2, 3, 2] },
+    { id: 'Dm',    name: 'Dm',    sub: 'D · F · A',      frets: [-1,-1, 0, 2, 3, 1] },
+    { id: 'E7',    name: 'E7',    sub: 'E · G♯ · B · D', frets: [ 0, 2, 0, 1, 0, 0] },
+    { id: 'A',     name: 'A',     sub: 'A · C♯ · E',     frets: [-1, 0, 2, 2, 2, 0] },
+    { id: 'G7',    name: 'G7',    sub: 'G · B · D · F',  frets: [ 3, 2, 0, 0, 0, 1] },
+    { id: 'Cadd9', name: 'Cadd9', sub: 'C · D · E · G',  frets: [-1, 3, 2, 0, 3, 3] },
+    { id: 'Bm',    name: 'Bm',    sub: 'B · D · F♯',     frets: [-1, 2, 4, 4, 3, 2] },
   ];
 
   const CHORD_MAP = Object.fromEntries(CHORD_LIBRARY.map((c) => [c.id, c]));
@@ -975,7 +975,7 @@
   holdToggleBtn.addEventListener('click', () => {
     state.holdMode = !state.holdMode;
     holdToggleBtn.setAttribute('aria-pressed', String(state.holdMode));
-    holdStateText.textContent = state.holdMode ? 'ON' : 'OFF';
+    if (holdStateText) holdStateText.textContent = state.holdMode ? 'ON' : 'OFF';
     updateFretboardVisuals();
   });
 
@@ -989,7 +989,7 @@
       btn.classList.toggle('active', btn === chip);
     });
 
-    // If Hold Mode is ON and user selects a guide chord, also apply its shape for immediate testing
+    // If Latch Mode is ON and user selects a guide chord, also apply its shape for immediate testing
     if (chordId && state.holdMode) {
       selectChord(chordId, false);
     } else {
@@ -1039,7 +1039,7 @@
     if (KEY_TO_CHORD[e.code]) {
       state.holdMode = true;
       holdToggleBtn.setAttribute('aria-pressed', 'true');
-      holdStateText.textContent = 'ON';
+      if (holdStateText) holdStateText.textContent = 'ON';
       selectChord(KEY_TO_CHORD[e.code], state.tapStrumInChordMode);
     } else if (e.code === 'Space' || e.code === 'ArrowDown') {
       e.preventDefault();

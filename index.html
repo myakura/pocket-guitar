@@ -54,9 +54,9 @@
           </select>
         </div>
 
-        <button type="button" id="hold-toggle-btn" class="pill-toggle" aria-pressed="false" title="Latch tapped frets so they stay pressed">
+        <button type="button" id="hold-toggle-btn" class="pill-toggle" aria-pressed="false" title="Latch mode: keep tapped frets pressed after lifting your finger">
           <span class="dot"></span>
-          Hold: <strong id="hold-state-text">OFF</strong>
+          Latch
         </button>
 
         <button type="button" id="lefty-toggle-btn" class="pill-toggle" aria-pressed="false" title="Left-handed mode: reverse string order (1E to 6E from left to right)">
@@ -72,7 +72,7 @@
       <!-- Third Toolbar Row: Volume & String / Neck Width Adjustment -->
       <div class="width-bar-row">
         <div class="slider-group">
-          <button type="button" id="mute-toggle-btn" class="icon-mute-btn" aria-pressed="false" title="Toggle Mute" aria-label="Toggle Mute">🔊</button>
+          <button type="button" id="mute-toggle-btn" class="icon-mute-btn" aria-pressed="false" title="Mute / Unmute" aria-label="Mute">🔊</button>
           <label class="control-label" for="volume-slider">Vol</label>
           <input
             type="range"
@@ -82,7 +82,7 @@
             max="100"
             step="1"
             value="85"
-            aria-label="Master Volume"
+            aria-label="Master volume"
           >
           <span class="width-value" id="volume-value">85%</span>
         </div>
@@ -90,7 +90,7 @@
         <div class="slider-divider" aria-hidden="true"></div>
 
         <div class="slider-group">
-          <label class="control-label" for="neck-width-slider">Width</label>
+          <label class="control-label" for="neck-width-slider">Neck</label>
           <input
             type="range"
             id="neck-width-slider"
@@ -99,7 +99,7 @@
             max="100"
             step="2"
             value="76"
-            aria-label="String spacing (neck width)"
+            aria-label="Neck width (string spacing)"
           >
           <span class="width-value" id="neck-width-value">76%</span>
           <div class="align-switch" role="group" aria-label="Neck alignment">
@@ -113,14 +113,14 @@
 
     <!-- UPPER AREA: Left-hand Fretboard / Chord Selection -->
     <main class="guitar-workspace">
-      <section class="upper-stage" aria-label="Fretboard and Chord Area">
+      <section class="upper-stage" aria-label="Fretboard and Chords">
         <!-- Fretboard Mode View -->
         <div id="fretboard-view" class="stage-view active">
           <!-- Optional Chord Guide Bar for Fretboard Practice -->
           <div class="guide-bar">
-            <span class="guide-label">Guide:</span>
+            <span class="guide-label">Guide</span>
             <div class="guide-chips" id="guide-chips">
-              <button type="button" class="guide-chip active" data-guide="">None</button>
+              <button type="button" class="guide-chip active" data-guide="">Off</button>
               <button type="button" class="guide-chip" data-guide="C">C</button>
               <button type="button" class="guide-chip" data-guide="G">G</button>
               <button type="button" class="guide-chip" data-guide="Am">Am</button>
@@ -130,7 +130,7 @@
               <button type="button" class="guide-chip" data-guide="Dm">Dm</button>
               <button type="button" class="guide-chip" data-guide="E7">E7</button>
             </div>
-            <button type="button" id="clear-frets-btn" class="clear-btn" title="Reset all strings to open">Clear</button>
+            <button type="button" id="clear-frets-btn" class="clear-btn" title="Reset all strings to open">Reset</button>
           </div>
 
           <div class="neck-stage-wrapper">
@@ -163,10 +163,10 @@
         <!-- Chord Mode View -->
         <div id="chord-view" class="stage-view">
           <div class="chord-mode-header">
-            <span class="chord-mode-hint">Select a chord above, then swipe the strings below to strum!</span>
+            <span class="chord-mode-hint">Pick a chord pad, then strum the strings below</span>
             <label class="auto-strum-label">
               <input type="checkbox" id="chord-tap-strum">
-              <span>Strum on tap</span>
+              <span>Preview on tap</span>
             </label>
           </div>
           <div class="chord-grid" id="chord-grid">
@@ -176,7 +176,7 @@
       </section>
 
       <!-- LOWER AREA: Right-hand Strumming & Picking Zone -->
-      <section class="lower-stage" id="strum-stage" aria-label="Strumming and Picking Area">
+      <section class="lower-stage" id="strum-stage" aria-label="Strum Zone">
         <div class="guitar-body-decor" aria-hidden="true">
           <div class="soundhole-ring">
             <div class="soundhole-inner"></div>
@@ -186,12 +186,12 @@
 
         <!-- Quick Strum Buttons for Accessibility / One-hand / PC -->
         <div class="strum-assist-bar">
-          <button type="button" id="strum-down-btn" class="strum-action-btn" title="Down Strum (6E → 1E)">
-            ▼ Down Strum
+          <button type="button" id="strum-down-btn" class="strum-action-btn" title="Downstroke (6E → 1E)">
+            ▼ Downstroke
           </button>
-          <span class="strum-instruction">Swipe horizontally to strum / Tap strings to pick</span>
-          <button type="button" id="strum-up-btn" class="strum-action-btn" title="Up Strum (1E → 6E)">
-            ▲ Up Strum
+          <span class="strum-instruction">Swipe across strings to strum · Tap to pluck</span>
+          <button type="button" id="strum-up-btn" class="strum-action-btn" title="Upstroke (1E → 6E)">
+            ▲ Upstroke
           </button>
         </div>
 
@@ -211,25 +211,26 @@
   <!-- Help Popover -->
   <div id="help-popover" popover class="help-modal">
     <div class="help-modal-header">
-      <h2>🎸 How to Play Pocket Guitar</h2>
+      <h2>🎸 Quick Guide</h2>
       <button type="button" popovertarget="help-popover" popovertargetaction="hide" class="close-popover-btn" aria-label="Close">✕</button>
     </div>
     <div class="help-modal-body">
-      <h3>📱 Touch Controls</h3>
+      <h3>📱 Playing on Touch</h3>
       <ul>
-        <li><strong>Upper Area (Frets / Chords)</strong>: Press frets or tap chord pads with your fretting hand.</li>
-        <li><strong>Lower Area (Strum Zone)</strong>: <strong>Swipe horizontally</strong> across the strings to strum, or <strong>tap individual strings</strong> to pick arpeggios.</li>
+        <li><strong>Upper Deck</strong>: Fret notes or select a chord pad with one hand.</li>
+        <li><strong>Lower Deck</strong>: <strong>Swipe across the strings</strong> to strum, or <strong>tap individual strings</strong> to pluck arpeggios.</li>
       </ul>
-      <h3>🔀 Two Play Modes</h3>
+      <h3>🔀 Modes & Ergonomics</h3>
       <ul>
-        <li><strong>Fretboard Mode</strong>: Press directly on the 6 strings (6E on the left to 1E on the right, or reversed in <strong>Lefty</strong> mode) across frets 1–5. Use <strong>Guide</strong> to highlight chord shapes, and toggle <strong>Hold: ON</strong> to latch frets without holding your fingers down.</li>
-        <li><strong>Chords Mode</strong>: Tap any chord pad (C, G, Am, F, etc.) to automatically fret that voicing so you can focus on strumming rhythm below.</li>
+        <li><strong>Fretboard</strong>: Multi-touch frets 1–5 across all 6 strings (<code>6E</code>–<code>1E</code>). Turn on <strong>Latch</strong> to keep notes held after lifting your fingers, or pick a <strong>Guide</strong> chord to light up its fingering.</li>
+        <li><strong>Chords</strong>: One-tap chord pads so you can focus purely on rhythm and strumming.</li>
+        <li><strong>Neck & Lefty</strong>: Adjust <strong>Neck</strong> width (<code>50%</code>–<code>100%</code>) to match real string spacing on large phones, or flip string order with <strong>Lefty</strong>.</li>
       </ul>
-      <h3>💻 Keyboard Shortcuts</h3>
+      <h3>⌨️ Desktop Shortcuts</h3>
       <ul>
-        <li>Number keys <code>1</code>–<code>9</code>: Select chords (C, G, Am, F, Em, D, Dm, E7, A)</li>
-        <li><code>Space</code> or <code>↓</code>: Down Strum / <code>↑</code>: Up Strum</li>
-        <li><code>Q</code> <code>W</code> <code>E</code> <code>R</code> <code>T</code> <code>Y</code>: Pluck individual strings from left to right</li>
+        <li><code>1</code>–<code>9</code>: Select chords (C, G, Am, F, Em, D, Dm, E7, A)</li>
+        <li><code>Space</code> / <code>↓</code>: Downstroke · <code>↑</code>: Upstroke</li>
+        <li><code>Q</code> <code>W</code> <code>E</code> <code>R</code> <code>T</code> <code>Y</code>: Pluck strings from left to right</li>
       </ul>
     </div>
   </div>
